@@ -11,8 +11,10 @@ class Shop:
 
     def add_item(self, item_name: str):
         current_capacity = sum(self.items.values())
+        
         if current_capacity == self.capacity:
             return "Not enough capacity in the shop"
+        
         if item_name not in self.items:
             self.items[item_name] = 0
         self.items[item_name] += 1
@@ -22,6 +24,7 @@ class Shop:
         if item_name not in self.items or amount > self.items[item_name]:
             return f"Cannot remove {amount} {item_name}"
         self.items[item_name] -= amount
+        
         if self.items[item_name] == 0:
             del self.items[item_name]
         return f"{amount} {item_name} removed from the shop"

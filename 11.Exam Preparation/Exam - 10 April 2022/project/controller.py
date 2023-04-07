@@ -53,23 +53,7 @@ class Controller:
                         self.supplies.pop(index)
 
                         return f"{player_name} sustained successfully with {supply.name}."
-                #
-                # for index in range(len(self.supplies) - 1, -1, -1):
-                #     product = self.supplies[index]
-                #     if product.__class__.__name__ == 'Drink':
-                #         if player.stamina + product.energy > 100:
-                #             player.stamina = 100
-                #         else:
-                #             player.stamina += product.energy
-                #
-                #     elif product.__class__.__name__ == 'Food':
-                #         if player.stamina + product.energy > 100:
-                #             player.stamina = 100
-                #         else:
-                #             player.stamina += product.energy
-                #     del self.supplies[index]
-                #
-                #     return f"{player_name} sustained successfully with {product.name}."
+                
 
     def duel(self, first_player_name: str, second_player_name: str):
         player_one = [p for p in self.players if p.name == first_player_name][0]
@@ -126,9 +110,3 @@ class Controller:
             food_info.append(supply.details())
 
         return players_info + '\n'.join(food_info)
-
-
-
-
-
-

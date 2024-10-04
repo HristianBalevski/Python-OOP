@@ -155,6 +155,37 @@ print(dog.bark())  # barking... (метод на Dog)
 print(cat.eat())   # eating... (наследено от Animal)
 print(cat.meow())  # meowing... (метод на Cat)
 ```
+
+**Hybrid Inheritance**
+комбинира повече от един тип наследяване. То е смес от **Single, Multiple, Multilevel and Hierarchical Inheritance. В Python, хибридното наследяване позволява изграждането на по-сложни йерархии на класове, като комбинира предимствата на различни форми на наследяване.
+```
+class Animal:
+    def eat(self):
+        return "Eating..."
+
+class Mammal(Animal):
+    def walk(self):
+        return "Walking..."
+
+class Bird(Animal):
+    def fly(self):
+        return "Flying..."
+
+class Bat(Mammal, Bird):  # Множествено наследяване
+    def sleep(self):
+        return "Sleeping..."
+
+# Създаваме обект от клас Bat
+bat = Bat()
+
+# Bat има достъп до методи от Animal, Mammal и Bird
+print(bat.eat())   # Eating... (от Animal)
+print(bat.walk())  # Walking... (от Mammal)
+print(bat.fly())   # Flying... (от Bird)
+print(bat.sleep()) # Sleeping... (от Bat)
+```
+![Python inheritance types](https://github.com/user-attachments/assets/f4101ed6-ad2d-4e0f-ad90-f279e10fd6bf)
+
 2. Методът ```super()```
 
 Методът ```super()``` позволява достъп до методите на родителския клас от дъщерния. Използва се за разширяване на функционалността на наследен метод.

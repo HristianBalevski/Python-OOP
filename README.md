@@ -349,10 +349,10 @@ print(person.age)  # 30
 ```
 **3. Вградени функции за достъп до атрибути**
 
-- ```getattr(obj, attr)```: достъп до атрибут по име.
-- ```hasattr(obj, attr)```: проверка дали обектът има даден атрибут.
-- ```setattr(obj, attr, value)```: задаване на стойност на атрибут.
-- ```delattr(obj, attr)```: изтриване на атрибут.
+- ```getattr(object, attribute)```: достъп до атрибут по име.
+- ```hasattr(object, attribute)```: проверка дали обектът има даден атрибут.
+- ```setattr(object, attribute, value)```: задаване на стойност на атрибут.
+- ```delattr(object, attribute)```: изтриване на атрибут.
 
 ```
 class Person:

@@ -251,3 +251,121 @@ print(car.play_song(95.0))  # Playing song on 95.0
 Наследяването в Python е мощен инструмент за създаване на гъвкав и преизползваем код. Разбирането на различните форми на наследяване и правилното им прилагане е ключово за ефективното разработване на Python приложения.
 
 ---
+
+## 6.Encapsulation
+
+Енкапсулацията е основен принцип в обектно-ориентираното програмиране, който позволява обединяването на данни и методи в един компонент (клас), и контролирането на достъпа до тях.
+Python използва конвенции за енкапсулация, вместо строго налагане от езика:
+
+- **Public**: по подразбиране всички атрибути и методи са публични.
+- **Protected**: използва един долен индикатор ```_```, достъпът е само вътре в класа и неговите подкласове.
+```
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self._age = age
+
+person = Person('Peter', 25)
+print(person.name)  # Peter
+print(person._age)  # 25 (достъпно, но по конвенция не трябва да се използва извън класа)
+```
+- **Private**: използва два долни индикатора ```__```, достъпът е ограничен само в класа, чрез механизма **name mangling**.
+```
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.__age = age
+    
+    def info(self):
+        print(f"I am {self.name}, {self.__age} years old.")
+
+person = Person('Peter', 25)
+person.info()  # I am Peter, 25 years old.
+print(person.__age)  # AttributeError
+```
+**1. Name Mangling**
+
+Python използва ```name mangling``` за атрибути с двойно подчертаване. Това променя името на атрибута, за да се избегне конфликти в подкласовете.
+```
+class Car:
+    def __init__(self):
+        self.__max_speed = 200
+    
+    def drive(self):
+        print(f"Driving max speed {self.__max_speed}")
+
+car = Car()
+car.drive()  # Driving max speed 200
+car.__max_speed = 300  # Това създава нов атрибут, не променя оригиналния
+car.drive()  # Все още извежда: Driving max speed 200
+print(car._Car__max_speed) # 200 - достъп до частен атрибут чрез name mangling
+```
+**2. Getters and Setters**:
+
+Гетърите и сетърите позволяват контрол върху това как се достъпват и променят частни атрибути.
+
+Пример:
+```
+class Person:
+    def __init__(self, name, age):
+        self.__name = name
+        self.__age = age
+    
+    def get_age(self):
+        return self.__age
+    
+    def set_age(self, age):
+        if age > 0:
+            self.__age = age
+
+person = Person("Peter", 25)
+print(person.get_age())  # 25
+person.set_age(30)
+print(person.get_age())  # 30
+```
+**Properties**:
+
+Декоратора ```@property``` е "Pythonic" начин за използване на гетъри и сетъри.
+```
+class Person:
+    def __init__(self, age):
+        self.__age = age
+    
+    @property
+    def age(self):
+        return self.__age
+    
+    @age.setter
+    def age(self, value):
+        if value > 0:
+            self.__age = value
+        else:
+            raise ValueError("Age must be positive")
+
+person = Person(25)
+print(person.age)  # 25
+person.age = 30
+print(person.age)  # 30
+```
+**3. Вградени функции за достъп до атрибути**
+
+- ```getattr(obj, attr)```: достъп до атрибут по име.
+- ```hasattr(obj, attr)```: проверка дали обектът има даден атрибут.
+- ```setattr(obj, attr, value)```: задаване на стойност на атрибут.
+- ```delattr(obj, attr)```: изтриване на атрибут.
+
+```
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+person = Person('Peter')
+print(getattr(person, 'name'))  # Peter
+print(hasattr(person, 'age'))   # False
+setattr(person, 'age', 25)
+print(person.age)               # 25
+delattr(person, 'age')
+print(hasattr(person, 'age'))   # False
+```
+
+Тези концепции са ключови за създаването на добре структуриран и поддържаем Python код, особено в контекста на уеб разработката, където правилното управление на данните и контролът на достъпа са от съществено значение.

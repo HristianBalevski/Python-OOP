@@ -148,6 +148,171 @@ def scopes():
   print(car.get_info())  # This is Kia Rio with engine 1.3L B3 I4
   ```
   ООП предоставя ясна структура на програмата, намалява сложността и улеснява поддръжката и модификацията на съществуващия код.
+
+---
+
+## 02. Classes and Objects
+
+**1.Classes and Instances**
+
+- **Класовете** в Python поддържат две основни операции:
+  1.**Достъп до атрибути** с оператор ```.```.
+  2.**Инстанция** (създаване на обект) чрез извикване на класа като функция.
+
+  Пример:
+
+  ```
+  class Example:
+    text = 'Hello'
+    def print_text(self):
+        return 'SoftUni'
+
+  Example.text  # референция към атрибут
+  Example.print_text  # референция към атрибут
+  x = Example()  # инстанциране
+
+  ```
+
+**2.Instantiation**
+
+Инстанцирането създава нов обект от класа:
+
+```
+class Person:
+    name = "George"
+    age = 25
+
+person = Person()
+print(person.name)  # George
+print(person.age)  # 25
+```
+
+- Методът ```__init__``` се извиква автоматично при създаване на нов обект:
+- ```self``` служи за референция към конкретната инстанция на класа и се използва за свързване на атрибутите с дадените аргументи.
+  ```
+  class Laptop:
+    def __init__(self, name, model):
+        self.name = name
+        self.model = model
+
+  my_laptop = Laptop("Inspiron 15", "Dell")
+  print(my_laptop.name)   # Inspiron 15
+  print(my_laptop.model)  # Dell
+  ```
+
+**3.Attributes**
+
+Атрибутите са два вида:
+
+- Methods.
+- Data Attributes.
+
+**4.Methods**
+
+- Методите са функции, които описват поведението на обектите.
+- Първият аргумент на методите по конвенция е **self**.
+
+Пример:
+
+```
+class MyClass:
+    def say_hello(self):
+        return 'Hello'
+
+x = MyClass()
+x.say_hello()  # конвенционален начин
+MyClass.say_hello(x)  # еквивалентен начин
+```
+
+**5.Special / Dunder Methods**
+
+Това са вградени методи, обградени с двойни долни черти, които обогатяват дизайна на класа и подобряват четливостта.
+Например: ```__init__```, ```__str__```, ```__repr__```, ```__dict__``` и др.
+
+```
+class Dog:
+    def__init__(self, name):
+        self.name = name
+
+x = Dog("Max")
+print(x.__dict__) # {"name": "Max"}
+```
+
+**6.Data Attributes**
+
+- **Data attributes** са стойности, които се съхраняват вътре в един обект и определят неговото състояние. Те могат да бъдат:
+  - **Инстанционни атрибути** (instance variables) – уникални за всяка инстанция на класа.
+  - **Класови атрибути** (class variables) – споделени между всички инстанции на класа.
+ 
+**Инстанционни атрибути**
+
+- Дефинират се вътре в метода ```__init__()```, и техните стойности могат да бъдат различни за всеки обект.
+
+**Класови атрибути**
+
+- Определят се директно в тялото на класа (извън методите) и тяхната стойност е обща за всички инстанции на класа.
+
+**Пример: Instance vs Class Variables**
+
+```
+class Laptop:
+    brand = "Dell"  # Класов атрибут, споделен от всички обекти
+
+    def __init__(self, model):
+        self.model = model  # Инстанционен атрибут, уникален за всеки обект
+
+# Създаваме две инстанции на класа Laptop
+laptop1 = Laptop("Latitude 5300")
+laptop2 = Laptop("Inspiron 15")
+
+# Достъп до инстанционни и класови атрибути
+print(laptop1.brand)  # Dell (класов атрибут)
+print(laptop2.brand)  # Dell (същия класов атрибут)
+
+print(laptop1.model)  # Latitude 5300 (уникален за laptop1)
+print(laptop2.model)  # Inspiron 15 (уникален за laptop2)
+```
+
+**Пример за лоша практика с класови променливи**
+
+Ако класов атрибут се използва за съхраняване на данни, които трябва да бъдат уникални за всяка инстанция, всички инстанции ще споделят една и съща стойност. Това може да доведе до неочаквани резултати:
+
+```
+class Dog:
+    tricks = []  # Класов атрибут, споделен от всички инстанции
+
+    def __init__(self, name):
+        self.name = name
+
+dog1 = Dog("Buddy")
+dog2 = Dog("Max")
+
+dog1.tricks.append('roll over')  # Добавяме трик на dog1
+print(dog2.tricks)  # ['roll over'] - споделено с dog2, което е нежелано
+```
+
+**Добра практика за инстанционни променливи**
+
+За да се избегне нежелано споделяне на стойности, атрибути, които трябва да са уникални за всяка инстанция, трябва да се декларират като **инстанционни променливи**:
+
+```
+class Dog:
+    def __init__(self, name):
+        self.name = name
+        self.tricks = []  # Инстанционен атрибут, уникален за всяка инстанция
+
+dog1 = Dog("Buddy")
+dog2 = Dog("Max")
+
+dog1.tricks.append('roll over')  # Добавяме трик на dog1
+dog2.tricks.append('play dead')  # Добавяме трик на dog2
+
+print(dog1.tricks)  # ['roll over']
+print(dog2.tricks)  # ['play dead']
+```
+
+---
+
 ## 05.Inheritance
 
 **В обектно-ориентираното програмиране има четири основни концепции:**

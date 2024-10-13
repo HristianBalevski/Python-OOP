@@ -313,7 +313,7 @@ print(dog2.tricks)  # ['play dead']
 
 ---
 
-## 05.Inheritance
+## 03.Inheritance
 
 **В обектно-ориентираното програмиране има четири основни концепции:**
 
@@ -505,7 +505,7 @@ print(car.play_song(95.0))  # Playing song on 95.0
 
 ---
 
-## 6.Encapsulation
+## 04.Encapsulation
 
 Енкапсулацията е основен принцип в обектно-ориентираното програмиране, който позволява обединяването на данни и методи в един компонент (клас), и контролирането на достъпа до тях.
 Python използва конвенции за енкапсулация, вместо строго налагане от езика:
@@ -622,3 +622,120 @@ print(hasattr(person, 'age'))   # False
 ```
 
 Тези концепции са ключови за създаването на добре структуриран и поддържаем Python код, особено в контекста на уеб разработката, където правилното управление на данните и контролът на достъпа са от съществено значение.
+
+---
+
+## 05.Static and Class Methods
+
+**1.Static Methods**
+
+Статичните методи са независими от състоянието на класа или инстанцията. Те се дефинират с декоратора ```@staticmethod```.
+
+- Статичният метод не знае нищо за състоянието на обекта или класа, на който е извикан.
+- Той не може да променя състоянието на обекта или класа.
+- Може да бъде извън класа, но се използва вътре, когато е логически свързан с него.
+- Статичните методи не приемат параметъра ```self```, тъй като не работят със състоянието на обекта.
+
+```
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+    @staticmethod
+    def is_adult(age):
+        return age >= 18
+
+print(Person.is_adult(5))  # False
+girl = Person("Amy")
+print(girl.is_adult(20))   # True
+```
+В този пример методът ```is_adult``` е независим от състоянието на класа или обекта и може да се извика както с клас, така и с инстанция.
+
+**Предимства на статичните методи:**
+
+- Показват, че даден метод е независим от останалото в класа.
+- Помагат да се избегнат случайни модификации, които противоречат на оригиналния дизайн.
+- Лесни са за тестване, защото са напълно изолирани.
+
+**2.Class Methods**
+
+- Дефинират се с декоратора ```@classmethod```.
+- Те са свързани с класа, а не с конкретна инстанция.
+- Могат да променят състоянието на класа, което ще се отрази на всички инстанции.
+- Първият параметър е самият клас (обикновено се нарича cls)
+
+```
+class Pizza:
+    def __init__(self, ingredients):
+        self.ingredients = ingredients
+
+    @classmethod
+    def pepperoni(cls):
+        return cls(["tomato sauce", "parmesan", "pepperoni"])
+
+    @classmethod
+    def quattro_formaggi(cls):
+        return cls(["mozzarella", "gorgonzola", "fontina", "parmigiano"])
+
+first_pizza = Pizza.pepperoni()
+second_pizza = Pizza.quattro_formaggi()
+```
+В този пример клас методите се използват за създаване на различни видове пици. Методите като ```pepperoni``` и ```quattro_formaggi``` създават инстанции на класа с предварително дефинирани съставки.
+
+**Предимства на клас методите:**
+
+- Клас методите предоставят лесен начин за създаване на нови обекти (т.нар. "factory methods").
+- Следват принципа DRY (Don't Repeat Yourself), като се избягват излишни повторения при създаване на инстанции.
+
+**Overriding Using Class Methods**
+
+Методите могат да бъдат пренаписани в наследени класове, като се използват класови методи за валидиране.
+
+```
+class Person:
+    min_age = 0
+    max_age = 150
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    @staticmethod
+    def __validate_age(value):
+        if value < Person.min_age or value > Person.max_age:
+            raise ValueError()
+
+    @property
+    def age(self):
+        return self.__age
+
+    @age.setter
+    def age(self, value):
+        self.__validate_age(value)
+        self.__age = value
+--------------------------------------------------------------------------
+
+class Employee(Person):
+    min_age = 16
+    max_age = 150
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    @staticmethod
+    def __validate_age(value):
+        if value < Employee.min_age or value > Employee.max_age:
+            raise ValueError()
+
+    @property
+    def age(self):
+        return self.__age
+
+    @age.setter
+    def age(self, value):
+        self.__validate_age(value)
+        self.__age = value
+```
+
+---

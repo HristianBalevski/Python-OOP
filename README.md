@@ -689,7 +689,7 @@ second_pizza = Pizza.quattro_formaggi()
 - Клас методите предоставят лесен начин за създаване на нови обекти (т.нар. "factory methods").
 - Следват принципа DRY (Don't Repeat Yourself), като се избягват излишни повторения при създаване на инстанции.
 
-**Overriding Using Class Methods**
+**3.Overriding Using Class Methods**
 
 Методите могат да бъдат пренаписани в наследени класове, като се използват класови методи за валидиране.
 

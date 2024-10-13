@@ -121,6 +121,7 @@ def scopes():
 **5.Creating and Using Classes**
 
 - **Пример за клас Book**: Приема име, автор и брой страници при инициализация.
+  
   ```
   class Book:
     def __init__(self, name, author, pages):
@@ -134,6 +135,7 @@ def scopes():
   print(book.pages)  # 200
   ```
 - **Методите** са функции, които работят само вътре в съответния клас.
+  
   ```
   class Car:
     def __init__(self, name, model, engine):

@@ -742,3 +742,160 @@ class Employee(Person):
 ```
 
 ---
+
+## 06.Polymorphism and Abstraction
+
+- Polymorphism се състои от 2 Гръцки думи, poly(много) и morphism(форми).
+- Полиморфизмът означава, че различни класове могат да използват един и същ метод, но с различна реализация. Това е ключова концепция в OOP, защото позволява на различни обекти да бъдат обработвани чрез общ интерфейс.
+
+**Пример:**
+
+```
+class Shape:
+    def calculate_area(self):
+        return None
+
+class Square(Shape):
+    side_length = 2
+    def calculate_area(self):
+        return self.side_length ** 2
+
+class Triangle(Shape):
+    base_length = 4
+    height = 3
+    def calculate_area(self):
+        return 0.5 * self.base_length * self.height
+
+shapes = [Square(), Triangle()]
+for shape in shapes:
+    print(shape.calculate_area())
+```
+В този пример методът ```calculate_area``` е полиморфен – различните фигури (квадрат и триъгълник) го реализират по различен начин, но можем да ги обработваме по един и същи начин чрез основния клас ```Shape```.
+
+**Compile-Time Polymorphism:**
+
+Python не поддържа **compile-time polymorphism** или **method overloading**. Ако се опитаме да създадем два метода с едно и също име, вторият ще замести първия.
+
+```
+class Person:
+    def say_hello():
+        return "Hi!"
+    def say_hello():
+        return "Hello"
+
+print(Person.say_hello())  # Hello
+```
+
+**Overloading Built-in Methods**
+
+- Можем да променим поведението на функции като **len**, **abs**, **str**, **repr** и др.
+- За да направим това, трябва просто да дефинираме съответния магически метод.
+
+```
+class MyClass:
+    def __init__(self, name, size):
+        self.name = name
+        self.size = size
+
+    def __len__(self):
+        return self.size
+
+
+my_class = MyClass("Class Name", 3)
+print(len(my_class))  # 3
+```
+
+Пример: Overloading ```__add__()```
+
+- Ако имаме **class Purchase** и искаме да сметнем всички разходи използвайки оператора **+**, можем да ползваме ```__add__``` метода.
+
+```
+class Purchase:
+    def __init__(self, product_name, cost):
+        self.product_name = product_name
+        self.cost = cost
+
+    def __add__(self, other):
+        name = f'{self.product_name}, {other.product_name}'
+        cost = self.cost + other.cost
+        return Purchase(name, cost)
+
+first_purchase = Purchase('sofa', 650)
+second_purchase = Purchase('table', 150)
+total = first_purchase + second_purchase
+print(total.product_name, total.cost)  # sofa, table; 800
+```
+
+Пример: Overloading ```__gt__()```
+
+- Ако имаме **class Person** и искаме да сравним техните заплати ползвайки оператора **>**, можем да ползваме  метода ```__gt__```.
+
+```
+class Person:
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
+
+    def __gt__(self, other):
+        return self.salary > other.salary
+
+person_one = Person('John', 20)
+person_two = Person('Natasha', 36)
+print(person_one > person_two)  # False
+```
+
+**Duck Typing**
+
+Duck Typing е подход в Python, при който типът на обекта не е важен, стига обектът да има необходимите методи. Това ни позволява да използваме един и същ код за различни типове обекти, които споделят сходна функционалност.
+
+Пример:
+
+```
+class Cat:
+    def sound(self):
+        print("Meow!")
+
+class Train:
+    def sound(self):
+        print("Sound from wheels slipping!")
+
+def make_sound(obj):
+    obj.sound()
+
+make_sound(Cat())   # Meow!
+make_sound(Train())  # Sound from wheels slipping!
+```
+
+**What is an Abstraction**
+
+- Абстракцията е принцип в OOP, който скрива ненужните детайли и показва само съществената информация за обекта. Абстрактните класове са класове, които съдържат абстрактни методи – методи без имплементация, които задължават наследниците си да ги реализират.
+- Абстрактен метод е метод, който се декларира но не се имплементира.
+
+Пример:
+
+```
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
+    def calculate_area(self):
+        pass
+
+    @abstractmethod
+    def calculate_perimeter(self):
+        pass
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self._radius = radius
+
+    def calculate_area(self):
+        return 3.14 * self._radius ** 2
+
+    def calculate_perimeter(self):
+        return 2 * 3.14 * self._radius
+```
+
+В този пример класът ```Shape``` е абстрактен и съдържа два абстрактни метода, които класът ```Circle``` трябва да имплементира.
+
+---

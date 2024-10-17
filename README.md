@@ -899,3 +899,186 @@ class Circle(Shape):
 В този пример класът ```Shape``` е абстрактен и съдържа два абстрактни метода, които класът ```Circle``` трябва да имплементира.
 
 ---
+
+## 07.SOLID
+
+**1.Single Responsibility Principle (SRP)**
+
+Всеки клас трябва да има само една причина за промяна, тоест трябва да бъде отговорен за само една задача или функционалност.
+
+**Пример за нарушение на SRP:**
+
+```
+class Student:
+    def __init__(self, name):
+        self.name = name
+    
+    def get_name(self):
+        return self.name
+
+    def register(self, student):
+        # Регистрация в база данни
+        pass
+```
+Тук, класът ```Student``` отговаря както за управление на данните на студента, така и за регистрацията му в базата данни. Това нарушава **SRP**, защото при промяна на начина на управление на данните или на базата данни, ще трябва да променяме класа.
+
+**Решение:**
+Разделяме отговорностите на два класа:
+
+```
+class Student:
+    def __init__(self, name):
+        self.name = name
+    
+    def get_name(self):
+        return self.name
+
+class StudentRecords:
+    def register(self, student):
+        # Регистрация в база данни
+        pass
+```
+Тук всеки клас има една отговорност: ```Student``` е отговорен за информацията на студента, а ```StudentRecords``` за работата с базата данни.
+
+**2.Open/Closed Principle (OCP)**
+
+Софтуерните единици (като класове, модули, функции) трябва да са отворени за разширяване, но затворени за промени. Това означава, че трябва да можем да добавяме нова функционалност, без да променяме съществуващия код.
+
+**Пример за нарушение на OCP:**
+
+```
+class StudentTaxes:
+    def __init__(self, name, semester_tax, average_grade):
+        self.name = name
+        self.semester_tax = semester_tax
+        self.average_grade = average_grade
+
+    def get_discount(self):
+        if self.average_grade > 5:
+            return self.semester_tax * 0.4
+        elif self.average_grade > 4:
+            return self.semester_tax * 0.2
+        return 0
+```
+Ако искаме да добавим нова отстъпка (например за студенти с оценка над 3), ще трябва да променим класа, което нарушава OCP.
+
+**Решение:**
+Можем да наследим класа и да добавим нова логика, без да променяме вече съществуващия код:
+
+```
+class AdditionalDiscount(StudentTaxes):
+    def get_discount(self):
+        result = super().get_discount()
+        if result:
+            return result
+        if 3 < self.average_grade <= 4:
+            return self.semester_tax * 0.1
+        return 0
+```
+Тук използваме наследяване, за да добавим новата функционалност, без да пипаме оригиналния клас.
+
+**3.Liskov Substitution Principle (LSP)**
+
+Наследените класове да могат да заменят базовия клас, без да нарушават функционалността на програмата. Тоест, обектите на подтипове трябва да могат да се използват навсякъде, където се използват обекти на базовия тип.
+
+**Пример за нарушение на LSP:**
+Ако имаме клас Person и клас Student, но Student променя основното поведение на Person, тогава това ще наруши LSP.
+
+**Решение:**
+При създаване на нови класове, трябва да внимаваме наследените класове да разширяват функционалността, а не да я променят или премахват.
+
+**4.Interface Segregation Principle (ISP)**
+
+Клиентите не трябва да бъдат принуждавани да зависят от методи, които не използват. В Python, въпреки че нямаме официални интерфейси, можем да използваме **миксинообразни класове**, за да разделим различни поведения.
+
+**Пример за нарушение на ISP:**
+
+```
+class Shape:
+    def draw_rectangle(self):
+        raise NotImplementedError
+    
+    def draw_circle(self):
+        raise NotImplementedError
+
+class Rectangle(Shape):
+    def draw_rectangle(self):
+        # Логика за правоъгълник
+        pass
+    
+    def draw_circle(self):
+        pass  # Този метод не е нужен
+```
+Тук класът ```Rectangle``` има метод ```draw_circle```, който не му е нужен. Това нарушава ISP.
+
+**Решение:**
+Разделяме поведението в различни класове:
+
+```
+class Shape:
+    def draw(self):
+        raise NotImplementedError
+
+class Rectangle(Shape):
+    def draw(self):
+        # Логика за рисуване на правоъгълник
+        pass
+
+class Circle(Shape):
+    def draw(self):
+        # Логика за рисуване на кръг
+        pass
+```
+
+Сега всеки клас имплементира само методите, които са му необходими.
+
+**5.Dependency Inversion Principle (DIP)**
+
+Високо ниво модули не трябва да зависят от ниско ниво модули. И двата трябва да зависят от абстракции. Това ни помага да намалим зависимостите между различни компоненти.
+
+**Пример за нарушение на DIP:**
+
+```
+class Email:
+    def send_email(self):
+        pass
+
+class Notification:
+    def __init__(self):
+        self.email = Email()  # Пряка зависимост
+
+    def send(self):
+        self.email.send_email()
+```
+Тук ```Notification``` зависи директно от ```Email```, което прави класа труден за промяна или тестване.
+
+**Решение:**
+Използваме абстракции, за да премахнем директната зависимост:
+
+```
+class MessageService:
+    def send_message(self):
+        pass
+
+class Email(MessageService):
+    def send_message(self):
+        # Логика за изпращане на имейл
+        pass
+
+class Notification:
+    def __init__(self, service: MessageService):
+        self.service = service
+
+    def send(self):
+        self.service.send_message()
+```
+Сега класът ```Notification``` зависи от абстракцията ```MessageService```, което ни позволява лесно да сменяме имейла с други услуги (SMS, push notifications и т.н.).
+
+**Summary:**
+
+Всички тези принципи имат за цел да направят кода по-гъвкав, лесен за поддръжка и по-малко податлив на грешки при промени.
+
+![SOLID Principles](https://github.com/user-attachments/assets/68d37931-2ad8-4d25-a341-9410b5936eba)
+
+
+

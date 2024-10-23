@@ -1140,8 +1140,9 @@ def first_n(n):
         yield num
         num += 1
 
-for value in first_n(5):
-    print(value)  # Извежда 0, 1, 2, 3, 4
+
+sum_first_n = sum(first_n(5))
+print(sum_first_n) # Извежда -> 10
 ```
 
 Разлика между ```yield``` и ```return```:

@@ -169,8 +169,8 @@ def scopes():
     def print_text(self):
         return 'SoftUni'
 
-  Example.text  # референция към атрибут
-  Example.print_text  # референция към атрибут
+  Example.text  # референция към атрибут на класа
+  Example.print_text  # референция към метод на класа
   x = Example()  # инстанциране
 
   ```

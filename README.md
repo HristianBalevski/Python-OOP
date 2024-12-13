@@ -615,10 +615,13 @@ class Person:
         self.name = name
 
 person = Person('Peter')
+
 print(getattr(person, 'name'))  # Peter
 print(hasattr(person, 'age'))   # False
+
 setattr(person, 'age', 25)
-print(getattr(person, 'age'))               # 25
+print(getattr(person, 'age'))   # 25
+
 delattr(person, 'age')
 print(hasattr(person, 'age'))   # False
 ```

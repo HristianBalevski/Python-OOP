@@ -974,6 +974,7 @@ class AdditionalDiscount(StudentTaxes):
         result = super().get_discount()
         if result:
             return result
+
         if 3 < self.average_grade <= 4:
             return self.semester_tax * 0.1
         return 0
@@ -987,8 +988,68 @@ class AdditionalDiscount(StudentTaxes):
 **Пример за нарушение на LSP:**
 Ако имаме клас Person и клас Student, но Student променя основното поведение на Person, тогава това ще наруши LSP.
 
+```
+class Person:
+    def get_name(self):
+        return "Person"
+
+class Student(Person):
+    def get_name(self):
+        raise NotImplementedError("Students do not have names in this implementation.")
+
+# Примерен код, който използва базовия клас
+def print_name(person):
+    print(person.get_name())
+
+# Това е проблем:
+try:
+    person = Person()
+    student = Student()
+
+    print_name(person)  # Работи нормално
+    print_name(student)  # Хвърля грешка: NotImplementedError
+except Exception as e:
+    print(f"Грешка: {e}")
+```
+
+**Обяснение на проблема**
+
+  - Методът ```get_name``` на класа ```Student``` хвърля грешка вместо да предоставя функционалност, която разширява или запазва поведението на базовия клас.
+
+  - Това нарушава LSP, защото обект от типа ```Student``` не може да бъде използван на мястото на обект от типа ```Person```.
+
+  - ```Student``` не спазва очакванията, дефинирани от базовия клас ```Person```. Всяко място в кода, което приема ```Person```, може да се провали, ако подадем ```Student```.
+
 **Решение:**
 При създаване на нови класове, трябва да внимаваме наследените класове да разширяват функционалността, а не да я променят или премахват.
+
+```
+class Person:
+    def get_name(self):
+        return "Person"
+
+class Student(Person):
+    def get_name(self):
+        return "Student"
+
+# Примерен код, който използва базовия клас
+def print_name(person):
+    print(person.get_name())
+
+# Това е коректно:
+person = Person()
+student = Student()
+
+print_name(person)  # Резултат: "Person"
+print_name(student)  # Резултат: "Student"
+```
+**Обяснение на правилния пример**
+
+  - Методът ```get_name``` на класа ```Student``` разширява поведението на базовия клас, вместо да го променя или премахва.
+
+  - Всеки обект от типа ```Student``` може да бъде използван навсякъде, където се изисква обект от типа ```Person```.
+
+  - ```Student``` напълно спазва интерфейса на ```Person``` и гарантира, че функционалността на програмата няма да бъде нарушена при замяна на ```Person``` с ```Student```.
 
 **4.Interface Segregation Principle (ISP)**
 
